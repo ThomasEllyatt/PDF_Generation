@@ -1,0 +1,30 @@
+from fpdf import FPDF
+import pandas as pd
+
+pdf = FPDF(orientation="portrait", unit="mm", format="A4")
+pdf.set_auto_page_break(auto=False, margin=0)
+
+pdf.add_font("Poppins", "", "Poppins-Regular.ttf", uni=True)
+pdf.add_font("Poppins", "B", "Poppins-Medium.ttf", uni=True)
+
+df = pd.read_csv("topics.csv")
+
+for index, row in df.iterrows():
+    for x in range(row["Pages"]):
+        pdf.add_page()
+
+        # Header Config
+        pdf.set_font(family="Poppins", style="B", size=14)
+        pdf.set_text_color(19, 38, 47)
+        pdf.set_line_width(1)
+        pdf.cell(w=0, h=10, txt=row["Topic"], align="L", ln=1, border=0)
+        pdf.line(10, 20, 200, 20)
+
+        # Footer Config
+        pdf.set_line_width(0.5)
+        pdf.line(10, 280, 200, 280)
+        pdf.ln(260)
+        pdf.set_font(family="Poppins", style="", size=8)
+        pdf.cell(w=0, h=8, txt=f"{row['Topic']} | Page {x + 1} of {row['Pages']}", align="R", ln=1, border=0)
+
+pdf.output("output.pdf")
