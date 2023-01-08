@@ -4,17 +4,25 @@ import pandas as pd
 pdf = FPDF(orientation="portrait", unit="mm", format="A4")
 pdf.set_auto_page_break(auto=False, margin=0)
 
-pdf.add_font("Poppins", "", "Poppins-Regular.ttf", uni=True)
-pdf.add_font("Poppins", "B", "Poppins-Medium.ttf", uni=True)
+try:
+    pdf.add_font("Poppins", "", "Poppins-Regular.ttf", uni=True)
+    pdf.add_font("Poppins", "B", "Poppins-Medium.ttf", uni=True)
+    chosen_font = "Poppins"
+    print("Poppins Font Loaded Successfully\n")
+except RuntimeError as inst:
+    print(inst.args[0] + " | Using Arial font as default\n")
+    chosen_font = "Arial"
 
 df = pd.read_csv("topics.csv")
+print(f"{df.index.max() + 1} Sections to be created\n")
 
 for index, row in df.iterrows():
+    print(f"{index + 1}. {row['Topic']} | Section Created")
     for x in range(row["Pages"]):
         pdf.add_page()
 
         # Header Config
-        pdf.set_font(family="Poppins", style="B", size=16)
+        pdf.set_font(family=chosen_font, style="B", size=16)
         pdf.set_text_color(19, 38, 47)
         pdf.set_draw_color(254, 95, 85)
         pdf.set_line_width(1)
@@ -31,7 +39,7 @@ for index, row in df.iterrows():
         pdf.set_line_width(0.5)
         pdf.line(10, 280, 200, 280)
         pdf.ln(260)
-        pdf.set_font(family="Poppins", style="", size=8)
+        pdf.set_font(family=chosen_font, style="", size=8)
         pdf.cell(
             w=0,
             h=8,
@@ -43,3 +51,5 @@ for index, row in df.iterrows():
 
 # Export PDF file
 pdf.output("output.pdf")
+print("")
+print("PDF Created Successfully")
