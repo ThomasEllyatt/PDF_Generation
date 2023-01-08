@@ -20,6 +20,11 @@ for index, row in df.iterrows():
         pdf.cell(w=0, h=10, txt=row["Topic"], align="L", ln=1, border=0)
         pdf.line(10, 20, 200, 20)
 
+        # Lined Sheet
+        pdf.set_line_width(0.1)
+        for line in range(30, 280, 10):
+            pdf.line(10, line, 200, line)
+
         # Footer Config
         pdf.set_line_width(0.5)
         pdf.line(10, 280, 200, 280)
@@ -27,4 +32,5 @@ for index, row in df.iterrows():
         pdf.set_font(family="Poppins", style="", size=8)
         pdf.cell(w=0, h=8, txt=f"{row['Topic']} | Page {x + 1} of {row['Pages']}", align="R", ln=1, border=0)
 
+# Export PDF file
 pdf.output("output.pdf")
